@@ -10,36 +10,36 @@ and produce the stochastic processes with the requested properties.
 
 ### External code
 
-- stogen :
+- **_stogen_** :
 
-- stowrite :
+- **_stowrite_** :
 
-- stoexternal :
+- **_stoexternal_** :
 
-- stomod :
+- **_stomod_** :
 
-- stotemplate :
+- **_stotemplate_** :
 
 ### Stochastic modules
 
-- stoarray :
+- **_stoarray_** :
 
-- stopar :
+- **_stopar_** :
 
-- stowhite :
+- **_stowhite_** :
 
-- stodiff :
+- **_stodiff_** :
 
-- stokernel :
+- **_stokernel_** :
 
-- stosobolseq :
+- **_stosobolseq_** :
 
-- stomarginal :
+- **_stomarginal_** :
 
-- storng_kiss :
+- **_storng_kiss_** :
 
-- storng_ziggurat :
+- **_storng_ziggurat_** :
 
-- storng_check :
+- **_storng_check_** :
 
-- storst :
+- **_storst_** :
