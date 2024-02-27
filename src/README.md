@@ -11,14 +11,29 @@ and produce the stochastic processes with the requested properties.
 ### External code
 
 - **_stogen_** :
+    Main program with empty model illustrating the use of the stochastic modules, including:
+    - initialization of model parameters (grid, number of time steps, restart options),
+    - initialization of stochastic code (call to sto_mod_init),
+    - a loop on time steps to update the stochastic fields (call to sto_mod)
+      and store them in files (call to sto_write).
+
+- **_stomod_** :
+    Main stochastic module (model dependent),
+    embedding all dynamical stochastic parameterizations:
+    - initialization phase (routine sto_mod_init):
+      - initialization of every dynamical stochastic parameterizations (here only sto_template_init),
+      - initialization of the structure of the stochastic arrays (call to sto_array_init),
+      - initialization of the time iteration of the stochastic arrays (call to sto_par_init);
+    - time update (routine sto_mod):
+      - update stochastic fields (call to sto_par),
+      - apply dynamical stochastic parameterization (call to sto_template).
+    
+
+- **_stotemplate_** :
 
 - **_stowrite_** :
 
 - **_stoexternal_** :
-
-- **_stomod_** :
-
-- **_stotemplate_** :
 
 ### Stochastic modules
 
