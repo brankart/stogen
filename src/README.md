@@ -27,6 +27,7 @@ and produce the stochastic processes with the requested properties.
     - time update (routine `sto_mod`):
       - update stochastic fields (call to `sto_par`),
       - apply dynamical stochastic parameterization (call to `sto_template`).
+
     The routines may need to be organized differently depending on
     where the stochastic parameterization code must be code in the geohysical model.
     
