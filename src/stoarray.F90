@@ -1,7 +1,7 @@
 MODULE stoarray
    !!======================================================================
-   !!                       ***  MODULE  stopar  ***
-   !! Stochastic parameters : definition and time stepping
+   !!                       ***  MODULE  stoarray  ***
+   !! Stochastic parameters : definition and storage of stochastic fields
    !!=====================================================================
    !! History :  4.0  ! 2024-01 (J.-M. Brankart)  Original code
    !!----------------------------------------------------------------------
