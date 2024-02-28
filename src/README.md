@@ -17,7 +17,7 @@ and produce the stochastic processes with the requested properties.
     - a loop on time steps to update the stochastic fields (call to `sto_mod`)
       and store them in files (call to `sto_write`).
 
-- `stomod` :
+- **_stomod_** :
     Main stochastic module (model dependent),
     embedding all dynamical stochastic parameterizations:
     - initialization phase (routine `sto_mod_init`):
@@ -27,8 +27,9 @@ and produce the stochastic processes with the requested properties.
     - time update (routine `sto_mod`):
       - update stochastic fields (call to `sto_par`),
       - apply dynamical stochastic parameterization (call to `sto_template`).
+    The routines may need to be organized differently depending on
+    where the stochastic parameterization code must be code in the geohysical model.
     
-
 - **_stotemplate_** :
 
 - **_stowrite_** :
