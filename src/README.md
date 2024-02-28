@@ -92,7 +92,22 @@ and produce the stochastic processes with the requested properties.
     Generate a map of spatiallye correlated noise, with zero mean and unit standard deviation,
     using the convolution of a white noise with a filtering kernel.
 
+    The convolution integral is computed using a Quasi Monte Carlo approximation,
+    by summing over a limited number of kernel locations.
+
+    The Quasi Monte Carlo sequence of kernel locations
+    is obtained from a 2D random Sobol sequence (with module `stosobolseq`).
+
+    Options for the filtering kernel include: Gaussian kernel, Laplacian kernel,
+    box kernel, triangle kernel, Mexican hat wavelet (Ricker wavelet),
+    Morlet wavelet a (with specific choice of frequency, adjust if needed).
+
+    Options for computing distances include: grid coordinates, Cartesian coordinates,
+    spherical coordinates (more expensive).
+
 - **_stosobolseq_** :
+    Module to generate mutlidimensional Sobol sequences
+    (obtained from https://github.com/DaanVanVugt).
 
 - **_stomarginal_** :
     Transform the Gaussian process to the requested marginal distribution.
