@@ -14,8 +14,8 @@ and produce the stochastic processes with the requested properties.
     Main program with empty model illustrating the use of the stochastic modules, including:
     - initialization of model parameters (grid, number of time steps, restart options),
     - initialization of stochastic code (call to _sto_mod_init_),
-    - a loop on time steps to update the stochastic fields (call to sto_mod)
-      and store them in files (call to sto_write).
+    - a loop on time steps to update the stochastic fields (call to `sto_mod`)
+      and store them in files (call to `sto_write`).
 
 - **_stomod_** :
     Main stochastic module (model dependent),
