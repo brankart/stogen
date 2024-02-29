@@ -26,9 +26,12 @@ stofields(jsto)%nar_update=5  ! with update every 5 time steps (and interpolatio
 ```
 
 Other possibilities for `type_t` are `white` (default) and `constant`.
+
 The cost is proportional to `nar_order` (default=1).
+
 The cost decreases with `nar_update` (default=1), especially if the scheme to generate
 the spatially correlated noise is expensive.
+
 `nar_update` should not be larger than `corr_t`.
 
 ### Introduce space correlation (with diffusive operator)
@@ -42,6 +45,7 @@ stofields(jsto)%diff_type=0          ! type of diffusion operator (0=laplacian, 
 ```
 
 The cost is proportional to `diff_passes`, and may become quite large.
+
 `diff_type=0` is the default and currently only available option.
 
 ### Introduce space correlation (with kernel convolution)
@@ -53,6 +57,16 @@ stofields(jsto)%type_xy='kernel'     ! Use kernel convolution to obtain space co
 stofields(jsto)%ker_type=0           ! type of kernel (0=gaussian, default)
 stofields(jsto)%ker_coord=2          ! type of grid coordinates (2=spherical)
 ```
+
+The type of kernel (`ker_type`) can be:
+Gaussian (0), Laplacian (1), Box kernel (2), Triangle kernel (3),
+Mexican hat wavelet (4), or Morlet wavelet (5).
+
+The type of grid coordinates can be:
+grid (0, default), Cartesian (1), spherical (2).
+Options 0 and 1 are much less expensive,
+but, if used on the spher, the behaviour at the poles becomes grossly inconsistent
+and the periodicity conditions are lost.
 
 ### Modify marginal distribution
 
