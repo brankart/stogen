@@ -7,6 +7,8 @@ Of course, this could be provided through a parameter file.
 All examples are produced over 200 timesteps,
 for a 1° by 1° global grid on the sphere.
 
+Be careful to have the namelist files in the running directory.
+
 ### Default stochastic field
 
 A Gaussian white noise, with zero mean and unit standard deviation.
@@ -21,7 +23,7 @@ For instance with the specifications:
 ```
 stofields(jsto)%type_t='arn'  ! Use autorgeressive processes
 stofields(jsto)%nar_order=2   ! of order 2
-stofields(jsto)%corr_t=5.0    ! with a correlation time scale of 5 time steps
+stofields(jsto)%corr_t=10.0   ! with a correlation time scale of 5 time steps
 stofields(jsto)%nar_update=5  ! with update every 5 time steps (and interpolation inbetween)
 ```
 
@@ -58,7 +60,7 @@ For instance with the specifications (and keeping the time correlation specifica
 
 ```
 stofields(jsto)%type_xy='kernel'     ! Use kernel convolution to obtain space correlation
-stofields(jsto)%corr_xy=50.0         ! correlation length scale (in degrees, in spherical coordinates)
+stofields(jsto)%corr_xy=10.0         ! correlation length scale (in degrees, in spherical coordinates)
 stofields(jsto)%ker_type=0           ! type of kernel (0=gaussian, default)
 stofields(jsto)%ker_coord=2          ! type of grid coordinates (2=spherical coordinates)
 ```

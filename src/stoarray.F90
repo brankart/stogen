@@ -444,7 +444,7 @@ CONTAINS
       INTEGER, INTENT(in) :: kjsto
 
       SELECT CASE(stofields(kjsto)%type_t)
-      CASE('arn')
+      CASE('white','arn')
       CASE DEFAULT
          STOP 'Bad type of time structure in stoarray'
       END SELECT

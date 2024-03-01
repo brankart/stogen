@@ -76,9 +76,9 @@ CONTAINS
       pt2d(1,:)   = pt2d(jpi-1,:)
       pt2d(jpi,:) = pt2d(2,:)
 
-      ! set field to zero at poles
-      pt2d(:,1)   = 0._wp
-      pt2d(:,jpj) = 0._wp
+      ! set condition at poles
+      pt2d(:,1)   = SUM(pt2d(1:jpi-2,2))/(jpi-2)
+      pt2d(:,jpj) = SUM(pt2d(1:jpi-2,jpj-1))/(jpi-2)
 
    END SUBROUTINE lbc_lnk_2d
 
@@ -99,13 +99,17 @@ CONTAINS
       REAL(wp), DIMENSION(jpi,jpj,jpk), INTENT(inout)           ::   pt3d      ! 3D array on which the lbc is applied
       REAL(wp)                        , INTENT(in   )           ::   psgn      ! control of the sign
 
+      INTEGER :: jk
+
       ! periodic condition in longitude
       pt3d(1,:,:)   = pt3d(jpi-1,:,:)
       pt3d(jpi,:,:) = pt3d(2,:,:)
 
-      ! set field to zero at poles
-      pt3d(:,1,:)   = 0._wp
-      pt3d(:,jpj,:) = 0._wp
+      ! set condition at poles
+      DO jk = 1, jpk
+        pt3d(:,  1,jk) = SUM(pt3d(1:jpi-2,    2,jk))/(jpi-2)
+        pt3d(:,jpj,jk) = SUM(pt3d(1:jpi-2,jpj-1,jk))/(jpi-2)
+      ENDDO
 
    END SUBROUTINE lbc_lnk_3d
 
