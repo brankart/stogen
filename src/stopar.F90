@@ -235,7 +235,7 @@ CONTAINS
       INTEGER,                  INTENT(in), OPTIONAL  :: jk
       !!
       LOGICAL :: l2d, l3d
-      INTEGER :: type_xy, jstoidx, kdim
+      INTEGER :: type_xy, jstoidx, kdim, jkused
       CHARACTER(len=1) :: sto_typ
       REAL(wp) :: sto_sgn
 
@@ -243,13 +243,13 @@ CONTAINS
       l3d = PRESENT(jk)
 
       IF (l2d) THEN
-         kdim = 2
+         kdim = 2 ; jkused = 1
          jstoidx = sto2d_idx(jsto)
          type_xy = sto2d_xy(jsto)
          sto_typ = sto2d_typ(jsto)
          sto_sgn = sto2d_sgn(jsto)
       ELSEIF (l3d) THEN
-         kdim = 3
+         kdim = 3 ; jkused = jk
          jstoidx = sto3d_idx(jsto)
          type_xy = sto3d_xy(jsto)
          sto_typ = sto3d_typ(jsto)
@@ -262,7 +262,7 @@ CONTAINS
          CALL lbc_lnk( psto, sto_typ, sto_sgn )
       ELSEIF (type_xy==1) THEN
          ! diffusion method
-         CALL sto_diff( psto,  jstoidx, kdim )
+         CALL sto_diff( psto,  jstoidx, kdim, jkused )
       ELSEIF (type_xy==2) THEN
          ! kernel method
          CALL sto_kernel( psto, jstoidx )

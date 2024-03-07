@@ -64,7 +64,7 @@ CONTAINS
       l5 = .FALSE. ! exclude example 5
       l6 = .FALSE. ! exclude example 6
 
-      l6 = .TRUE.  ! include example 6 in output file
+      l3 = .TRUE.  ! include example 6 in output file
 
       ! Read namelist block corresponding to this stochastic scheme
       ! -> get parameters
@@ -102,7 +102,7 @@ CONTAINS
 
         stofields(jstotemplate3)%type_xy='diffusive'
         stofields(jstotemplate3)%diff_passes=50
-        stofields(jstotemplate3)%diff_type=0
+        stofields(jstotemplate3)%diff_type=1
       ENDIF
 
       ! Example 4 : space correlation (with kernel convolution)

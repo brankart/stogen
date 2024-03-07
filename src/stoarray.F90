@@ -527,7 +527,7 @@ CONTAINS
          STOP 'Bad update time of AR process in stoarray'
       ENDIF
 
-      IF ( (stofields(kjsto)%diff_type < 0) .OR. (stofields(kjsto)%diff_type > 0 ) ) THEN
+      IF ( (stofields(kjsto)%diff_type < 0) .OR. (stofields(kjsto)%diff_type > 1 ) ) THEN
          STOP 'Bad diffusion operator type in stoarray'
       ENDIF
 

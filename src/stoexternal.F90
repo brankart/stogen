@@ -18,7 +18,7 @@ MODULE stoexternal
    ! Problem dimension
    INTEGER, PUBLIC, PARAMETER ::   jpi = 361      !: size dimension 1
    INTEGER, PUBLIC, PARAMETER ::   jpj = 181      !: size dimension 2
-   INTEGER, PUBLIC ::   jpk = 1        !: size dimension 3
+   INTEGER, PUBLIC, PARAMETER ::   jpk = 1        !: size dimension 3
    INTEGER, PUBLIC ::   narea = 1      !: index of local domain
    INTEGER, PUBLIC ::   mppsize = 1    !: number of processes
    INTEGER, PUBLIC ::   jpiglo = jpi   !: size of global domain (dim 1)
@@ -30,6 +30,11 @@ MODULE stoexternal
    REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj) :: glamt, gphit   ! longitude and latitude
    REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj) :: glamtglo       ! global longitude
    REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj) :: gphitglo       ! global latitude
+
+   ! Description of the mask
+   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: tmask = 1  ! land/ocean mask at T-points
+   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: umask = 1  ! land/ocean mask at U-points
+   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: vmask = 1  ! land/ocean mask at V-points
 
    ! I/O parameters
    INTEGER, PUBLIC ::   numout      =    6      !: logical unit for output print; set to stdout; do not change
@@ -52,7 +57,7 @@ MODULE stoexternal
       MODULE PROCEDURE lbc_lnk_2d, lbc_lnk_3d
    END INTERFACE
 
-   PUBLIC ctl_nam, initialize_grid
+   PUBLIC ctl_nam, initialize_grid, initialize_mask
 
 CONTAINS
 
@@ -166,5 +171,24 @@ CONTAINS
       ENDDO
 
    END SUBROUTINE initialize_grid
+
+
+   SUBROUTINE initialize_mask
+      !!----------------------------------------------------------------------
+      !!                  ***  ROUTINE initialize_mask  ***
+      !!
+      !! ** Purpose :   initialization of mask features
+      !!----------------------------------------------------------------------
+      tmask(jpi/2,jpj/4:3*jpj/4,:) = 0.
+      umask(jpi/2,jpj/4:3*jpj/4,:) = 0.
+      umask(jpi/2-1,jpj/4:3*jpj/4,:) = 0.
+      vmask(jpi/2,jpj/4-1:3*jpj/4,:) = 0.
+
+      tmask(jpi/4:3*jpi/4,jpj/2,:) = 0.
+      umask(jpi/4:3*jpi/4,jpj/2,:) = 0.
+      umask(jpi/4:3*jpi/4,jpj/2-1,:) = 0.
+      umask(jpi/4-1:3*jpi/4,jpj/2,:) = 0.
+
+   END SUBROUTINE initialize_mask
 
 END MODULE stoexternal

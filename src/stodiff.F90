@@ -10,17 +10,19 @@ MODULE stodiff
    USE stoarray        ! module with stochastic arrays to update
    USE stowhite        ! uncorrelatedi normal  random number generator
    ! user supplied external resources
-   USE stoexternal, only : wp, jpi, jpj, lbc_lnk
+   USE stoexternal, only : wp, jpi, jpj, lbc_lnk, tmask, umask, vmask
 
 
    IMPLICIT NONE
    PRIVATE
 
+   REAL(wp), DIMENSION(:,:), ALLOCATABLE :: ztu, ztv ! temporary workspace
+
    PUBLIC sto_diff, sto_diff_init
 
 CONTAINS
 
-   SUBROUTINE sto_diff(psto,jsto,kdim)
+   SUBROUTINE sto_diff(psto,jsto,kdim,jk)
       !!----------------------------------------------------------------------
       !!                  ***  ROUTINE sto_diff  ***
       !!
@@ -29,6 +31,7 @@ CONTAINS
       REAL(wp), DIMENSION(:,:), INTENT(out) :: psto   ! output stochastic field
       INTEGER, INTENT(in) :: jsto   ! index of stochastic field in stoarray
       INTEGER, INTENT(in) :: kdim   ! dimension of stochastic field
+      INTEGER, INTENT(in) :: jk     ! index of vertical level
 
       INTEGER :: jpasses, jstoidx
       CHARACTER(len=1) :: sto_typ
@@ -56,7 +59,7 @@ CONTAINS
       ! apply passes of the diffusion operator
       DO jpasses = 1, stofields(jsto)%diff_passes
          CALL lbc_lnk( psto, sto_typ, sto_sgn )
-         CALL diff_operator( psto, jsto )
+         CALL diff_operator( psto, jsto, jk )
       END DO
 
       ! apply factor to restore unit standard deviation
@@ -78,10 +81,16 @@ CONTAINS
          sto_fac(jsto) = diff_operator_factor( jsto ) 
       ENDDO
 
+      ! allocate working arrays if needed
+      IF (ANY(stofields(:)%diff_type==1)) THEN
+         ALLOCATE(ztu(jpi,jpj))
+         ALLOCATE(ztv(jpi,jpj))
+      ENDIF
+
    END SUBROUTINE sto_diff_init
 
 
-   SUBROUTINE diff_operator( psto, jsto )
+   SUBROUTINE diff_operator( psto, jsto, jk )
       !!----------------------------------------------------------------------
       !!                  ***  ROUTINE diff_operator  ***
       !!
@@ -89,6 +98,7 @@ CONTAINS
       !!----------------------------------------------------------------------
       REAL(wp), DIMENSION(:,:), INTENT(out)           ::   psto
       INTEGER, INTENT(in) :: jsto   ! index of stochastic field in stoarray
+      INTEGER, INTENT(in) :: jk     ! index of vertical level
       !!
       INTEGER :: diff_type
       INTEGER  :: ji, jj
@@ -102,6 +112,23 @@ CONTAINS
             psto(ji,jj) = 0.5_wp * psto(ji,jj) + 0.125_wp * &
                               &  ( psto(ji-1,jj) + psto(ji+1,jj) +  &
                               &    psto(ji,jj-1) + psto(ji,jj+1) )
+         END DO
+         END DO
+      ELSEIF (diff_type==1) THEN
+         ! Laplacian diffusion, with mask taken into account
+         psto(:,:) = psto(:,:) * tmask(:,:,jk)
+         ! 1. Gradient computation
+         DO jj = 1, jpj-1
+         DO ji = 1, jpi-1
+            ztu(ji,jj) = ( psto(ji+1,jj  ) - psto(ji,jj) ) * umask(ji,jj,jk)
+            ztv(ji,jj) = ( psto(ji  ,jj+1) - psto(ji,jj) ) * vmask(ji,jj,jk)
+         END DO
+         END DO
+         ! 2. Divergence computation
+         DO jj = 2, jpj-1
+         DO ji = 2, jpi-1
+            psto(ji,jj) = psto(ji,jj) + 0.125_wp * (  ztu(ji,jj) - ztu(ji-1,jj)   &
+               &                                    + ztv(ji,jj) - ztv(ji,jj-1)  )
          END DO
          END DO
       ELSE
@@ -129,7 +156,7 @@ CONTAINS
       diff_type = stofields(jsto)%diff_type
       npasses   = stofields(jsto)%diff_passes
 
-      IF (diff_type==0) THEN
+      IF ((diff_type==0).OR.(diff_type==1)) THEN
          pflt0(-1,-1) = 0 ; pflt0(-1,0) = 1 ; pflt0(-1,1) = 0
          pflt0( 0,-1) = 1 ; pflt0( 0,0) = 4 ; pflt0( 0,1) = 1
          pflt0( 1,-1) = 0 ; pflt0( 1,0) = 1 ; pflt0( 1,1) = 0

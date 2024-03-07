@@ -8,7 +8,7 @@ PROGRAM stogen
    !! History :
    !!   2024-01  (J.-M. Brankart)
    !!----------------------------------------------------------------------
-   USE stoexternal, only : numnam_ref, numnam_cfg, numout, lwm, initialize_grid
+   USE stoexternal, only : numnam_ref, numnam_cfg, numout, lwm, initialize_grid, initialize_mask
    USE stomod   ! stochastic module
    USE stowrite
    !
@@ -28,8 +28,9 @@ PROGRAM stogen
    READ  ( numnam_cfg, namrun, IOSTAT = ios)
    IF( ios /= 0 ) STOP 'Unable to read namelist_cfg in stogen'
 
-   ! Initialize model grid
+   ! Initialize model grid and mask
    CALL initialize_grid
+   CALL initialize_mask
 
    ! initialize stochastic code
    CALL sto_mod_init
