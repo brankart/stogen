@@ -45,14 +45,17 @@ For instance with the specifications (and keeping the time correlation specifica
 ```
 stofields(jsto)%type_xy='diffusive'  ! Use diffusive operator to obtain space correlation
 stofields(jsto)%diff_passes=50       ! number of passes of the diffusion operator
-stofields(jsto)%diff_type=0          ! type of diffusion operator (0=laplacian, default)
+stofields(jsto)%diff_type=1          ! type of diffusion operator (1=laplacian with mask)
 ```
 
 See result in file: `stofield_diff.nc`
 
 The cost is proportional to `diff_passes`, and may become quite large.
 
-`diff_type=0` is the default and currently only available option.
+`diff_type=0` (Lpalcian diffusion without accounting for the land mask) is the default.
+With `diff_type=1` (as in the example), the land mask boundary conditions are applied to the diffusion operator.
+This is is illustrated in the example by a large cross of land in the middle of the domain,
+across which the stochastic field decorrelates.
 
 ### Introduce space correlation (with kernel convolution)
 
