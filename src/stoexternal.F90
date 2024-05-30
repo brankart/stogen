@@ -57,7 +57,7 @@ MODULE stoexternal
       MODULE PROCEDURE lbc_lnk_2d, lbc_lnk_3d
    END INTERFACE
 
-   PUBLIC ctl_nam, initialize_grid, initialize_mask
+   PUBLIC ctl_nam, initialize_grid, initialize_mask, broadcast_array
 
 CONTAINS
 
@@ -190,5 +190,13 @@ CONTAINS
       mask_u(jpi/4-1:3*jpi/4,jpj/2,:) = 0.
 
    END SUBROUTINE initialize_mask
+
+
+   SUBROUTINE broadcast_array( ptab )
+      REAL(wp), DIMENSION(:), INTENT(in) :: ptab   ! array to broadcast
+
+      ! Insert MPI broadcast code here
+
+   END SUBROUTINE broadcast_array
 
 END MODULE stoexternal

@@ -9,7 +9,8 @@ MODULE stokernel
    !!----------------------------------------------------------------------
    USE stoexternal, only : wp, narea, lwp, numout, &
                          & jpi, jpj, jpiglo, jpjglo, mig, mjg, &
-                         & glamt, gphit, glamtglo, gphitglo
+                         & glamt, gphit, glamtglo, gphitglo, &
+                         & broadcast_array
    USE stoarray
    USE stowhite
    USE stosobolseq
@@ -70,8 +71,12 @@ CONTAINS
          CALL sto_white( psto1d = psto_ampl )
       ENDIF
 
-      ! Broadcast random locations and amplitudes to all processors
-      ! -> CALL to broadcast code here
+      ! Broadcast random locations, length scales and amplitudes to all processors
+      CALL broadcast_array( xkernel )
+      CALL broadcast_array( ykernel )
+      CALL broadcast_array( ker_lx )
+      CALL broadcast_array( ker_ly )
+      CALL broadcast_array( psto_ampl )
 
       ! Compute stochastic fields by superposing the kernels at random locations
       ! with random normal amplitude
