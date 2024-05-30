@@ -32,9 +32,9 @@ MODULE stoexternal
    REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj) :: gphitglo       ! global latitude
 
    ! Description of the mask
-   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: tmask = 1  ! land/ocean mask at T-points
-   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: umask = 1  ! land/ocean mask at U-points
-   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: vmask = 1  ! land/ocean mask at V-points
+   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: mask_t = 1  ! land/ocean mask at T-points
+   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: mask_u = 1  ! land/ocean mask at U-points
+   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: mask_v = 1  ! land/ocean mask at V-points
 
    ! I/O parameters
    INTEGER, PUBLIC ::   numout      =    6      !: logical unit for output print; set to stdout; do not change
@@ -179,15 +179,15 @@ CONTAINS
       !!
       !! ** Purpose :   initialization of mask features
       !!----------------------------------------------------------------------
-      tmask(jpi/2,jpj/4:3*jpj/4,:) = 0.
-      umask(jpi/2,jpj/4:3*jpj/4,:) = 0.
-      umask(jpi/2-1,jpj/4:3*jpj/4,:) = 0.
-      vmask(jpi/2,jpj/4-1:3*jpj/4,:) = 0.
+      mask_t(jpi/2,jpj/4:3*jpj/4,:) = 0.
+      mask_u(jpi/2,jpj/4:3*jpj/4,:) = 0.
+      mask_u(jpi/2-1,jpj/4:3*jpj/4,:) = 0.
+      mask_v(jpi/2,jpj/4-1:3*jpj/4,:) = 0.
 
-      tmask(jpi/4:3*jpi/4,jpj/2,:) = 0.
-      umask(jpi/4:3*jpi/4,jpj/2,:) = 0.
-      umask(jpi/4:3*jpi/4,jpj/2-1,:) = 0.
-      umask(jpi/4-1:3*jpi/4,jpj/2,:) = 0.
+      mask_t(jpi/4:3*jpi/4,jpj/2,:) = 0.
+      mask_u(jpi/4:3*jpi/4,jpj/2,:) = 0.
+      mask_u(jpi/4:3*jpi/4,jpj/2-1,:) = 0.
+      mask_u(jpi/4-1:3*jpi/4,jpj/2,:) = 0.
 
    END SUBROUTINE initialize_mask
 

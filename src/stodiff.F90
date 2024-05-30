@@ -10,7 +10,7 @@ MODULE stodiff
    USE stoarray        ! module with stochastic arrays to update
    USE stowhite        ! uncorrelatedi normal  random number generator
    ! user supplied external resources
-   USE stoexternal, only : wp, jpi, jpj, lbc_lnk, tmask, umask, vmask
+   USE stoexternal, only : wp, jpi, jpj, lbc_lnk, mask_t, mask_u, mask_v
 
 
    IMPLICIT NONE
@@ -116,12 +116,12 @@ CONTAINS
          END DO
       ELSEIF (diff_type==1) THEN
          ! Laplacian diffusion, with mask taken into account
-         psto(:,:) = psto(:,:) * tmask(:,:,jk)
+         psto(:,:) = psto(:,:) * mask_t(:,:,jk)
          ! 1. Gradient computation
          DO jj = 1, jpj-1
          DO ji = 1, jpi-1
-            ztu(ji,jj) = ( psto(ji+1,jj  ) - psto(ji,jj) ) * umask(ji,jj,jk)
-            ztv(ji,jj) = ( psto(ji  ,jj+1) - psto(ji,jj) ) * vmask(ji,jj,jk)
+            ztu(ji,jj) = ( psto(ji+1,jj  ) - psto(ji,jj) ) * mask_u(ji,jj,jk)
+            ztv(ji,jj) = ( psto(ji  ,jj+1) - psto(ji,jj) ) * mask_v(ji,jj,jk)
          END DO
          END DO
          ! 2. Divergence computation
