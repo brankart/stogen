@@ -10,8 +10,8 @@ MODULE stodiff
    USE stoarray        ! module with stochastic arrays to update
    USE stowhite        ! uncorrelatedi normal  random number generator
    ! user supplied external resources
-   USE stoexternal, only : wp, jpi, jpj, lbc_lnk, mask_t, mask_u, mask_v
-
+   USE stoexternal, only : wp, jpi, jpj, lbc_lnk, rmask2d, umask2d, vmask2d, &
+                         & rmask3d, umask3d, vmask3d, grid_type
 
    IMPLICIT NONE
    PRIVATE
@@ -55,6 +55,8 @@ CONTAINS
 
       ! fill array with white noise
       CALL sto_white( psto2d = psto )
+      ! apply default boundary condition to white noise
+      CALL noise_boundary_condition( psto )
 
       ! apply passes of the diffusion operator
       DO jpasses = 1, stofields(jsto)%diff_passes
@@ -96,7 +98,7 @@ CONTAINS
       !!
       !! ** Purpose :   apply diffusion operator
       !!----------------------------------------------------------------------
-      REAL(wp), DIMENSION(:,:), INTENT(out)           ::   psto
+      REAL(wp), DIMENSION(:,:), INTENT(inout)           ::   psto
       INTEGER, INTENT(in) :: jsto   ! index of stochastic field in stoarray
       INTEGER, INTENT(in) :: jk     ! index of vertical level
       !!
@@ -115,27 +117,102 @@ CONTAINS
          END DO
          END DO
       ELSEIF (diff_type==1) THEN
-         ! Laplacian diffusion, with mask taken into account
-         psto(:,:) = psto(:,:) * mask_t(:,:,jk)
-         ! 1. Gradient computation
-         DO jj = 1, jpj-1
-         DO ji = 1, jpi-1
-            ztu(ji,jj) = ( psto(ji+1,jj  ) - psto(ji,jj) ) * mask_u(ji,jj,jk)
-            ztv(ji,jj) = ( psto(ji  ,jj+1) - psto(ji,jj) ) * mask_v(ji,jj,jk)
-         END DO
-         END DO
-         ! 2. Divergence computation
-         DO jj = 2, jpj-1
-         DO ji = 2, jpi-1
-            psto(ji,jj) = psto(ji,jj) + 0.125_wp * (  ztu(ji,jj) - ztu(ji-1,jj)   &
-               &                                    + ztv(ji,jj) - ztv(ji,jj-1)  )
-         END DO
-         END DO
+         IF (use_mask3d) THEN
+            IF (grid_type==0) THEN  ! u points on the left, v points below r/t points (as in CROCO)
+               ! Laplacian diffusion, with mask taken into account
+               psto(1:jpi,1:jpj) = psto(1:jpi,1:jpj) * rmask3d(1:jpi,1:jpj)
+               ! 1. Gradient computation
+               DO jj = 1, jpj-1
+               DO ji = 1, jpi-1
+                  ztu(ji,jj) = ( psto(ji+1,jj  ) - psto(ji,jj) ) * umask3d(ji,jj)
+                  ztv(ji,jj) = ( psto(ji  ,jj+1) - psto(ji,jj) ) * vmask3d(ji,jj)
+               END DO
+               END DO
+               ! 2. Divergence computation
+               DO jj = 2, jpj-1
+               DO ji = 2, jpi-1
+               psto(ji,jj) = psto(ji,jj) + 0.125_wp * (  ztu(ji,jj) - ztu(ji-1,jj)   &
+                  &                                    + ztv(ji,jj) - ztv(ji,jj-1)  )
+               END DO
+               END DO
+            ELSE                    ! u points on the right, v points above r/t points (as in NEMO)
+               ! Laplacian diffusion, with mask taken into account
+               psto(1:jpi,1:jpj) = psto(1:jpi,1:jpj) * rmask3d(1:jpi,1:jpj)
+               ! 1. Gradient computation
+               DO jj = 2, jpj
+               DO ji = 2, jpi
+                  ztu(ji,jj) = ( psto(ji,jj) - psto(ji-1,jj) ) * umask3d(ji,jj)
+                  ztv(ji,jj) = ( psto(ji,jj) - psto(ji,jj-1) ) * vmask3d(ji,jj)
+               END DO
+               END DO
+               ! 2. Divergence computation
+               DO jj = 2, jpj-1
+               DO ji = 2, jpi-1
+                  psto(ji,jj) = psto(ji,jj) + 0.125_wp * (  ztu(ji+1,jj) - ztu(ji,jj)   &
+                     &                                    + ztv(ji,jj+1) - ztv(ji,jj)  )
+               END DO
+               END DO
+            ENDIF
+         ELSE
+            IF (grid_type==0) THEN  ! u points on the left, v points below r/t points (as in CROCO)
+               ! Laplacian diffusion, with mask taken into account
+               psto(1:jpi,1:jpj) = psto(1:jpi,1:jpj) * rmask2d(1:jpi,1:jpj)
+               ! 1. Gradient computation
+               DO jj = 1, jpj-1
+               DO ji = 1, jpi-1
+                  ztu(ji,jj) = ( psto(ji+1,jj  ) - psto(ji,jj) ) * umask2d(ji,jj)
+                  ztv(ji,jj) = ( psto(ji  ,jj+1) - psto(ji,jj) ) * vmask2d(ji,jj)
+               END DO
+               END DO
+               ! 2. Divergence computation
+               DO jj = 2, jpj-1
+               DO ji = 2, jpi-1
+               psto(ji,jj) = psto(ji,jj) + 0.125_wp * (  ztu(ji,jj) - ztu(ji-1,jj)   &
+                  &                                    + ztv(ji,jj) - ztv(ji,jj-1)  )
+               END DO
+               END DO
+            ELSE                    ! u points on the right, v points above r/t points (as in NEMO)
+               ! Laplacian diffusion, with mask taken into account
+               psto(1:jpi,1:jpj) = psto(1:jpi,1:jpj) * rmask2d(1:jpi,1:jpj)
+               ! 1. Gradient computation
+               DO jj = 2, jpj
+               DO ji = 2, jpi
+                  ztu(ji,jj) = ( psto(ji,jj) - psto(ji-1,jj) ) * umask2d(ji,jj)
+                  ztv(ji,jj) = ( psto(ji,jj) - psto(ji,jj-1) ) * vmask2d(ji,jj)
+               END DO
+               END DO
+               ! 2. Divergence computation
+               DO jj = 2, jpj-1
+               DO ji = 2, jpi-1
+                  psto(ji,jj) = psto(ji,jj) + 0.125_wp * (  ztu(ji+1,jj) - ztu(ji,jj)   &
+                     &                                    + ztv(ji,jj+1) - ztv(ji,jj)  )
+               END DO
+               END DO
+            ENDIF
+         ENDIF
       ELSE
          STOP 'Bad diffusion operator in stodiff'
       ENDIF
 
    END SUBROUTINE diff_operator
+
+
+   SUBROUTINE noise_boundary_condition( psto )
+      !!----------------------------------------------------------------------
+      !!                  ***  ROUTINE noise_boundary_condition  ***
+      !!
+      !! ** Purpose :   apply lateral boundary conditions to input (white) noise
+      !!----------------------------------------------------------------------
+
+      REAL(wp), DIMENSION(:,:), INTENT(inout)           ::   psto
+
+      psto(1  ,:) = 0._wp
+      psto(jpi,:) = 0._wp
+
+      psto(:,  1) = 0._wp
+      psto(:,jpj) = 0._wp
+
+   END SUBROUTINE noise_boundary_condition
 
 
    FUNCTION diff_operator_factor( jsto )

@@ -31,10 +31,20 @@ MODULE stoexternal
    REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj) :: glamtglo       ! global longitude
    REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj) :: gphitglo       ! global latitude
 
-   ! Description of the mask
+   ! Description of the mask (real model arrays)
    REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: mask_t = 1  ! land/ocean mask at T-points
    REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: mask_u = 1  ! land/ocean mask at U-points
    REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: mask_v = 1  ! land/ocean mask at V-points
+
+   ! Description of the mask (pointers used in stochastic codes)
+   LOGICAL, PUBLIC, SAVE  :: use_mask3d = .TRUE.
+   INTEGER, PUBLIC, SAVE  :: grid_type = 1
+   REAL(wp), PUBLIC, SAVE, DIMENSION(:,:),   POINTER :: rmask2d ! land/ocean mask at T-points
+   REAL(wp), PUBLIC, SAVE, DIMENSION(:,:),   POINTER :: umask2d ! land/ocean mask at U-points
+   REAL(wp), PUBLIC, SAVE, DIMENSION(:,:),   POINTER :: vmask2d ! land/ocean mask at V-points
+   REAL(wp), PUBLIC, SAVE, DIMENSION(:,:,:), POINTER :: rmask3d ! land/ocean mask at T-points
+   REAL(wp), PUBLIC, SAVE, DIMENSION(:,:,:), POINTER :: umask3d ! land/ocean mask at U-points
+   REAL(wp), PUBLIC, SAVE, DIMENSION(:,:,:), POINTER :: vmask3d ! land/ocean mask at V-points
 
    ! I/O parameters
    INTEGER, PUBLIC ::   numout      =    6      !: logical unit for output print; set to stdout; do not change
@@ -179,15 +189,20 @@ CONTAINS
       !!
       !! ** Purpose :   initialization of mask features
       !!----------------------------------------------------------------------
-      mask_t(jpi/2,jpj/4:3*jpj/4,:) = 0.
-      mask_u(jpi/2,jpj/4:3*jpj/4,:) = 0.
-      mask_u(jpi/2-1,jpj/4:3*jpj/4,:) = 0.
-      mask_v(jpi/2,jpj/4-1:3*jpj/4,:) = 0.
 
-      mask_t(jpi/4:3*jpi/4,jpj/2,:) = 0.
-      mask_u(jpi/4:3*jpi/4,jpj/2,:) = 0.
-      mask_u(jpi/4:3*jpi/4,jpj/2-1,:) = 0.
-      mask_u(jpi/4-1:3*jpi/4,jpj/2,:) = 0.
+      rmask3d => mask_t
+      umask3d => mask_u
+      vmask3d => mask_V
+
+      rmask3d(jpi/2,jpj/4:3*jpj/4,:) = 0.
+      umask3d(jpi/2,jpj/4:3*jpj/4,:) = 0.
+      umask3d(jpi/2-1,jpj/4:3*jpj/4,:) = 0.
+      vmask3d(jpi/2,jpj/4-1:3*jpj/4,:) = 0.
+
+      tmask3d(jpi/4:3*jpi/4,jpj/2,:) = 0.
+      umask3d(jpi/4:3*jpi/4,jpj/2,:) = 0.
+      umask3d(jpi/4:3*jpi/4,jpj/2-1,:) = 0.
+      umask3d(jpi/4-1:3*jpi/4,jpj/2,:) = 0.
 
    END SUBROUTINE initialize_mask
 
