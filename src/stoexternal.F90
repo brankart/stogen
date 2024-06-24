@@ -200,8 +200,8 @@ CONTAINS
       vmask3d(jpi/2,jpj/4-1:3*jpj/4,:) = 0.
 
       rmask3d(jpi/4:3*jpi/4,jpj/2,:) = 0.
-      umask3d(jpi/4:3*jpi/4,jpj/2,:) = 0.
-      umask3d(jpi/4:3*jpi/4,jpj/2-1,:) = 0.
+      vmask3d(jpi/4:3*jpi/4,jpj/2,:) = 0.
+      vmask3d(jpi/4:3*jpi/4,jpj/2-1,:) = 0.
       umask3d(jpi/4-1:3*jpi/4,jpj/2,:) = 0.
 
    END SUBROUTINE initialize_mask
