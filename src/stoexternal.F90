@@ -32,9 +32,9 @@ MODULE stoexternal
    REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj) :: gphitglo       ! global latitude
 
    ! Description of the mask (real model arrays)
-   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: mask_t = 1  ! land/ocean mask at T-points
-   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: mask_u = 1  ! land/ocean mask at U-points
-   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk) :: mask_v = 1  ! land/ocean mask at V-points
+   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk), TARGET :: mask_t = 1  ! land/ocean mask at T-points
+   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk), TARGET :: mask_u = 1  ! land/ocean mask at U-points
+   REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk), TARGET :: mask_v = 1  ! land/ocean mask at V-points
 
    ! Description of the mask (pointers used in stochastic codes)
    LOGICAL, PUBLIC, SAVE  :: use_mask3d = .TRUE.
@@ -192,14 +192,14 @@ CONTAINS
 
       rmask3d => mask_t
       umask3d => mask_u
-      vmask3d => mask_V
+      vmask3d => mask_v
 
       rmask3d(jpi/2,jpj/4:3*jpj/4,:) = 0.
       umask3d(jpi/2,jpj/4:3*jpj/4,:) = 0.
       umask3d(jpi/2-1,jpj/4:3*jpj/4,:) = 0.
       vmask3d(jpi/2,jpj/4-1:3*jpj/4,:) = 0.
 
-      tmask3d(jpi/4:3*jpi/4,jpj/2,:) = 0.
+      rmask3d(jpi/4:3*jpi/4,jpj/2,:) = 0.
       umask3d(jpi/4:3*jpi/4,jpj/2,:) = 0.
       umask3d(jpi/4:3*jpi/4,jpj/2-1,:) = 0.
       umask3d(jpi/4-1:3*jpi/4,jpj/2,:) = 0.

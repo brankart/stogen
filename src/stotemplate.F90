@@ -64,7 +64,7 @@ CONTAINS
       l5 = .FALSE. ! exclude example 5
       l6 = .FALSE. ! exclude example 6
 
-      l3 = .TRUE.  ! include example 6 in output file
+      l6 = .TRUE.  ! include example 6 in output file
 
       ! Read namelist block corresponding to this stochastic scheme
       ! -> get parameters

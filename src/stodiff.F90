@@ -11,7 +11,7 @@ MODULE stodiff
    USE stowhite        ! uncorrelatedi normal  random number generator
    ! user supplied external resources
    USE stoexternal, only : wp, jpi, jpj, lbc_lnk, rmask2d, umask2d, vmask2d, &
-                         & rmask3d, umask3d, vmask3d, grid_type
+                         & rmask3d, umask3d, vmask3d, grid_type, use_mask3d
 
    IMPLICIT NONE
    PRIVATE
@@ -120,12 +120,12 @@ CONTAINS
          IF (use_mask3d) THEN
             IF (grid_type==0) THEN  ! u points on the left, v points below r/t points (as in CROCO)
                ! Laplacian diffusion, with mask taken into account
-               psto(1:jpi,1:jpj) = psto(1:jpi,1:jpj) * rmask3d(1:jpi,1:jpj)
+               psto(1:jpi,1:jpj) = psto(1:jpi,1:jpj) * rmask3d(1:jpi,1:jpj,jk)
                ! 1. Gradient computation
                DO jj = 1, jpj-1
                DO ji = 1, jpi-1
-                  ztu(ji,jj) = ( psto(ji+1,jj  ) - psto(ji,jj) ) * umask3d(ji,jj)
-                  ztv(ji,jj) = ( psto(ji  ,jj+1) - psto(ji,jj) ) * vmask3d(ji,jj)
+                  ztu(ji,jj) = ( psto(ji+1,jj  ) - psto(ji,jj) ) * umask3d(ji,jj,jk)
+                  ztv(ji,jj) = ( psto(ji  ,jj+1) - psto(ji,jj) ) * vmask3d(ji,jj,jk)
                END DO
                END DO
                ! 2. Divergence computation
@@ -137,12 +137,12 @@ CONTAINS
                END DO
             ELSE                    ! u points on the right, v points above r/t points (as in NEMO)
                ! Laplacian diffusion, with mask taken into account
-               psto(1:jpi,1:jpj) = psto(1:jpi,1:jpj) * rmask3d(1:jpi,1:jpj)
+               psto(1:jpi,1:jpj) = psto(1:jpi,1:jpj) * rmask3d(1:jpi,1:jpj,jk)
                ! 1. Gradient computation
                DO jj = 2, jpj
                DO ji = 2, jpi
-                  ztu(ji,jj) = ( psto(ji,jj) - psto(ji-1,jj) ) * umask3d(ji,jj)
-                  ztv(ji,jj) = ( psto(ji,jj) - psto(ji,jj-1) ) * vmask3d(ji,jj)
+                  ztu(ji,jj) = ( psto(ji,jj) - psto(ji-1,jj) ) * umask3d(ji,jj,jk)
+                  ztv(ji,jj) = ( psto(ji,jj) - psto(ji,jj-1) ) * vmask3d(ji,jj,jk)
                END DO
                END DO
                ! 2. Divergence computation
