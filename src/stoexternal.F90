@@ -37,8 +37,8 @@ MODULE stoexternal
    REAL(wp), PUBLIC, SAVE, DIMENSION(jpi,jpj,jpk), TARGET :: mask_v = 1  ! land/ocean mask at V-points
 
    ! Description of the mask (pointers used in stochastic codes)
-   LOGICAL, PUBLIC, SAVE  :: use_mask3d = .TRUE.
-   INTEGER, PUBLIC, SAVE  :: grid_type = 1
+   LOGICAL, PUBLIC, SAVE  :: use_mask3d = .TRUE.  ! use 2D or 3D masks in stochastic code
+   INTEGER, PUBLIC, SAVE  :: grid_type = 0        ! position of u,v points relative to r,t points
    REAL(wp), PUBLIC, SAVE, DIMENSION(:,:),   POINTER :: rmask2d ! land/ocean mask at T-points
    REAL(wp), PUBLIC, SAVE, DIMENSION(:,:),   POINTER :: umask2d ! land/ocean mask at U-points
    REAL(wp), PUBLIC, SAVE, DIMENSION(:,:),   POINTER :: vmask2d ! land/ocean mask at V-points
