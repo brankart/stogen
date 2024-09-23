@@ -44,7 +44,10 @@ PROGRAM stogen
       ! write stochastic fields in file
       CALL sto_write(kt)
    ENDDO
-   !
+
+   ! finalize stochastic code
+   CALL sto_mod_finalize
+
    ! finalize the output NetCDF file
    CALL sto_write_final
 

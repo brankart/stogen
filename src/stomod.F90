@@ -14,13 +14,14 @@ MODULE stomod
    USE stoarray
    USE stopar
    USE stotemplate
+   USE storst
 
    IMPLICIT NONE
    PRIVATE
 
    INTEGER, PARAMETER :: jpstomax=100   ! maximum number of stochastic arrays
 
-   PUBLIC sto_mod, sto_mod_init
+   PUBLIC sto_mod, sto_mod_init, sto_mod_finalize
 
 CONTAINS
 
@@ -71,6 +72,20 @@ CONTAINS
       CALL sto_par_init
 
    END SUBROUTINE sto_mod_init
+
+
+   SUBROUTINE sto_mod_finalize
+      !!----------------------------------------------------------------------
+      !!                     ***  ROUTINE sto_mod_finalize  ***
+      !!
+      !! Purpose : finalize stochastic parameterizations
+      !!
+      !!----------------------------------------------------------------------
+
+      ! write final restart file
+      CALL sto_rst_write
+
+   END SUBROUTINE sto_mod_finalize
 
    !!======================================================================
 END MODULE stomod
