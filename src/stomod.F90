@@ -6,8 +6,9 @@ MODULE stomod
    !!======================================================================
 
    !!----------------------------------------------------------------------
-   !!   sto_mod      : apply parameterizations at each model time step
-   !!   sto_mod_init : initialize stochastic parameterizations
+   !!   sto_mod          : apply parameterizations at each model time step
+   !!   sto_mod_init     : initialize stochastic parameterizations
+   !!   sto_mod_finalize : finalize stochastic parameterizations
    !!----------------------------------------------------------------------
 
    USE storng_check
