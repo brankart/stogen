@@ -118,7 +118,7 @@ CONTAINS
          END DO
       ELSEIF (diff_type==1) THEN
          IF (use_mask3d) THEN
-            IF (grid_type==0) THEN  ! u points on the left, v points below r/t points (as in CROCO)
+            IF (grid_type==0) THEN  ! u points on the left, v points below r/t points (as in NEMO)
                ! Laplacian diffusion, with mask taken into account
                psto(1:jpi,1:jpj) = psto(1:jpi,1:jpj) * rmask3d(1:jpi,1:jpj,jk)
                ! 1. Gradient computation
@@ -135,7 +135,7 @@ CONTAINS
                   &                                    + ztv(ji,jj) - ztv(ji,jj-1)  )
                END DO
                END DO
-            ELSE                    ! u points on the right, v points above r/t points (as in NEMO)
+            ELSE                    ! u points on the right, v points above r/t points (as in CROCO)
                ! Laplacian diffusion, with mask taken into account
                psto(1:jpi,1:jpj) = psto(1:jpi,1:jpj) * rmask3d(1:jpi,1:jpj,jk)
                ! 1. Gradient computation
@@ -154,7 +154,7 @@ CONTAINS
                END DO
             ENDIF
          ELSE
-            IF (grid_type==0) THEN  ! u points on the left, v points below r/t points (as in CROCO)
+            IF (grid_type==0) THEN  ! u points on the left, v points below r/t points (as in NEMO)
                ! Laplacian diffusion, with mask taken into account
                psto(1:jpi,1:jpj) = psto(1:jpi,1:jpj) * rmask2d(1:jpi,1:jpj)
                ! 1. Gradient computation
@@ -171,7 +171,7 @@ CONTAINS
                   &                                    + ztv(ji,jj) - ztv(ji,jj-1)  )
                END DO
                END DO
-            ELSE                    ! u points on the right, v points above r/t points (as in NEMO)
+            ELSE                    ! u points on the right, v points above r/t points (as in CROCO)
                ! Laplacian diffusion, with mask taken into account
                psto(1:jpi,1:jpj) = psto(1:jpi,1:jpj) * rmask2d(1:jpi,1:jpj)
                ! 1. Gradient computation
