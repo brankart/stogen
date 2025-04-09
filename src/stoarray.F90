@@ -253,7 +253,7 @@ CONTAINS
          ALLOCATE ( sto3d_typ(jpsto3d) )
          ALLOCATE ( sto3d_sgn(jpsto3d) )
          ALLOCATE ( sto3d_idx(jpsto3d) )
-         ALLOCATE ( sto3d_xy(jpsto2d) )
+         ALLOCATE ( sto3d_xy(jpsto3d) )
       ENDIF
 
       ! Allocate 0D stochastic arrays
