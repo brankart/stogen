@@ -82,6 +82,9 @@ MODULE stoarray
    INTEGER, PUBLIC :: jpidxsup2d = 0       ! supplementary slice for transformed field
    INTEGER, PUBLIC :: jpidxsup3d = 0       ! supplementary slice for transformed field
    INTEGER, PUBLIC :: jpidxsup0d = 0       ! supplementary slice for transformed field
+   INTEGER, PUBLIC :: jpidxlast2d = 1      ! last slice for transformed field
+   INTEGER, PUBLIC :: jpidxlast3d = 1      ! last slice for transformed field
+   INTEGER, PUBLIC :: jpidxlast0d = 1      ! last slice for transformed field
 
    ! Arrays with stochastic fields and features
    REAL(wp), PUBLIC, DIMENSION(:,:,:,:),   ALLOCATABLE, TARGET :: sto2d ! 2D stochastic parameters
@@ -236,7 +239,8 @@ CONTAINS
 
       ! Allocate 2D stochastic arrays
       IF ( jpsto2d > 0 ) THEN
-         ALLOCATE ( sto2d(jpi,jpj,jpidx2d+jpidxsup2d,jpsto2d) )
+         jpidxlast2d = jpidx2d+jpidxsup2d
+         ALLOCATE ( sto2d(jpi,jpj,jpidxlast2d,jpsto2d) )
          ALLOCATE ( sto2d_tcor(jpsto2d) )
          ALLOCATE ( sto2d_ord(jpsto2d) )
          ALLOCATE ( sto2d_typ(jpsto2d) )
@@ -247,7 +251,8 @@ CONTAINS
 
       ! Allocate 3D stochastic arrays
       IF ( jpsto3d > 0 ) THEN
-         ALLOCATE ( sto3d(jpi,jpj,jpk,jpidx3d+jpidxsup3d,jpsto3d) )
+         jpidxlast3d = jpidx3d+jpidxsup3d
+         ALLOCATE ( sto3d(jpi,jpj,jpk,jpidxlast3d,jpsto3d) )
          ALLOCATE ( sto3d_tcor(jpsto3d) )
          ALLOCATE ( sto3d_ord(jpsto3d) )
          ALLOCATE ( sto3d_typ(jpsto3d) )
@@ -258,7 +263,8 @@ CONTAINS
 
       ! Allocate 0D stochastic arrays
       IF ( jpsto0d > 0 ) THEN
-         ALLOCATE ( sto0d(jpidx0d+jpidxsup0d,jpsto0d) )
+         jpidxlast0d = jpidx0d+jpidxsup0d
+         ALLOCATE ( sto0d(jpidxlast0d,jpsto0d) )
          ALLOCATE ( sto0d_tcor(jpsto0d) )
          ALLOCATE ( sto0d_ord(jpsto0d) )
          ALLOCATE ( sto0d_idx(jpsto0d) )
@@ -272,13 +278,13 @@ CONTAINS
       ! For every stochastic parameter set pointer to memory array
       DO jsto = 1, jpsto
          IF (stofields(jsto)%dim==2) THEN
-            stofields(jsto)%sto2d => sto2d( :, :, jpidx2d+jpidxsup2d, stofields(jsto)%index )
+            stofields(jsto)%sto2d => sto2d( :, :, jpidxlast2d, stofields(jsto)%index )
             sto2d_idx(stofields(jsto)%index) = jsto
          ELSEIF (stofields(jsto)%dim==3) THEN
-            stofields(jsto)%sto3d => sto3d( :, :, :, jpidx3d+jpidxsup3d, stofields(jsto)%index )
+            stofields(jsto)%sto3d => sto3d( :, :, :, jpidxlast3d, stofields(jsto)%index )
             sto3d_idx(stofields(jsto)%index) = jsto
          ELSEIF (stofields(jsto)%dim==0) THEN
-            stofields(jsto)%sto0d => sto0d( jpidx0d+jpidxsup0d, stofields(jsto)%index )
+            stofields(jsto)%sto0d => sto0d( jpidxlast0d, stofields(jsto)%index )
             sto0d_idx(stofields(jsto)%index) = jsto
          ENDIF
       ENDDO
@@ -444,7 +450,7 @@ CONTAINS
       INTEGER, INTENT(in) :: kjsto
 
       SELECT CASE(stofields(kjsto)%type_t)
-      CASE('white','arn')
+      CASE('white','arn','constant')
       CASE DEFAULT
          STOP 'Bad type of time structure in stoarray'
       END SELECT
