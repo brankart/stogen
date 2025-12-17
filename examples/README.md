@@ -52,7 +52,7 @@ See result in file: `stofield_diff.nc`
 
 The cost is proportional to `diff_passes`, and may become quite large.
 
-`diff_type=0` (Lpalcian diffusion without accounting for the land mask) is the default.
+`diff_type=0` (Laplacian diffusion without accounting for the land mask) is the default.
 With `diff_type=1` (as in the example), the land mask boundary conditions are applied to the diffusion operator.
 This is is illustrated in the example by a large cross of land in the middle of the domain,
 across which the stochastic field decorrelates.
