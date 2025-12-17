@@ -85,11 +85,11 @@ and produce the stochastic processes with the requested properties.
     Generate a map of Gaussian white noise, with zero mean and unit standard deviation.
 
 - **_stodiff_** :
-    Generate a map of spatiallye correlated noise, with zero mean and unit standard deviation,
+    Generate a map of spatially correlated noise, with zero mean and unit standard deviation,
     using the recursive application of a diffusion operator on a white noise.
 
 - **_stokernel_** :
-    Generate a map of spatiallye correlated noise, with zero mean and unit standard deviation,
+    Generate a map of spatially correlated noise, with zero mean and unit standard deviation,
     using the convolution of a white noise with a filtering kernel.
 
     The convolution integral is computed using a Quasi Monte Carlo approximation,
