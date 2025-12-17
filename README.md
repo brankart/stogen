@@ -15,7 +15,7 @@ Spatial correlation can be obtained by any of the following algorithms:
 with a Quasi Monte Carlo approximation of the convolution integral
 (more efficient for long-range correlation scales), in module stokernel.
 
-Other algorithms can easily be introduced in the code as a new possible optipn
+Other algorithms can easily be introduced in the code as a new possible option
 (in routine `sto_new_2d` in module stopar).
 
 ### Time correlation
