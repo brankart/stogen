@@ -2,7 +2,7 @@
 
 There are two kinds of modules:
 
-- the external code, which mimics the time iteration of a geohysical model (like NEMO),
+- the external code, which mimics the time iteration of a geophysical model (like NEMO),
 and illustrates how to make requests to the stochastic modules;
 
 - the stochastic modules, which receive requests from the external code
@@ -29,10 +29,10 @@ and produce the stochastic processes with the requested properties.
       - apply dynamical stochastic parameterization (call to `sto_template`).
 
     The routines may need to be organized differently depending on
-    where the stochastic parameterization code must be used in the geohysical model.
+    where the stochastic parameterization code must be used in the geophysical model.
     
 - **_stotemplate_** :
-    Template for including a new dynamical stochastic parameterization in the geohysical model.
+    Template for including a new dynamical stochastic parameterization in the geophysical model.
     This illustrates how to make requests for stochastic fields with user-defined fetaures
     and how to use the resulting stochastic fields in the model.
     - initialization phase (routine `sto_template_init`):
@@ -50,7 +50,7 @@ and produce the stochastic processes with the requested properties.
 
 - **_stoexternal_** :
     This module is used by the stochastic modules below to get all information
-    they need from the geohysical model: type of variables, description of the model grid,
+    they need from the geophysical model: type of variables, description of the model grid,
     ensemble parameters, lateral boundary conditions (or connection between subdomains).
     This is the only place where model data go to the stochastic modules,
     so that this can be easily identified and possibly upgraded. This is model dependent.
