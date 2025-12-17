@@ -42,7 +42,7 @@ to allow for higher order interpolation schemes.
 ### Marginal distribution
 
 By default, the marginal distribution of the stochastic fields
-is a normal distribution (with sero mean and unit standard deviation).
+is a normal distribution (with zero mean and unit standard deviation).
 Other distributions can be obtained by applying a transformation
 to the reference normal processes (in module stomarginal), including:
 
@@ -73,7 +73,7 @@ The result I obtain from this comparison is:
 We test 3 random number generators:
    -kiss64 (period ~ 2^250, with four 64-bit seeds),
    -kiss32 (period ~ 2^123, with four 32-bit seeds),
-   -shr3   (period ~ 2^64,  with one  32-bit seed)
+   -shr3   (period ~ 2^32,  with one  32-bit seed)
 together with 2 methods to generate normal numbers:
    -the polar method (Marsaglia, 1964),
    -the ziggurat method (Marsaglia, 2000).
